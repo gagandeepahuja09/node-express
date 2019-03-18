@@ -1,10 +1,15 @@
 const express = require('express');
 const http = require('http');
+const morgan = require('morgan');
 
 const hostname = 'localhost';
 const port = 3000;
 
 const app = express();
+app.use(morgan('dev'));
+
+// Serving static files using morgan
+app.use(express.static(__dirname + '/public'));
 
 // next is for middlewares
 
