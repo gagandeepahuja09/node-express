@@ -10,12 +10,17 @@ const app = express();
 app.use(morgan('dev'));
 
 const dishRouter = require('./routes/dishRouter');
+const promoRouter = require('./routes/promoRouter');
+const leaderRouter = require('./routes/leaderRouter');
+
 
 // Serving static files using morgan
 app.use(express.static(__dirname + '/public'));
 
 // Mount at an endpoint
 app.use('/dishes', dishRouter);
+app.use('/promotions', promoRouter);
+app.use('/leaders', leaderRouter);
 
 app.get('/dishes/:dishId', (req, res, next) => {
 	res.end('Will send the details of the dish' + req.params.dishId
