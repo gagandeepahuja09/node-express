@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const hostname = 'localhost';
 const port = 3000;
@@ -10,6 +11,58 @@ app.use(morgan('dev'));
 
 // Serving static files using morgan
 app.use(express.static(__dirname + '/public'));
+
+app.all('/dishes', (req, res, next) => {
+	res.statusCode = 200;
+	res.setHeader('Content-Type', 'text/plain');
+	// next will cause the changed state to pass downwards to other
+	// requests get and post
+	next();
+});
+
+// Server receives
+app.get('/dishes', (req, res, next) => {
+	res.end('Will send all the dishes to you!');
+});
+
+// Sending it to client
+app.post('/dishes', (req, res, next) => {
+	res.end('Will add the dish' + req.body.name + 'with details' + 
+		req.body.description);
+});
+
+app.put('/dishes', (req, res, next) => {
+	res.statusCode = 403;
+	res.end('PUT operation not supported on /dishes');
+});
+
+app.delete('/dishes', (req, res, next) => {
+	res.end('Will delete all the dishes!');
+});
+
+app.get('/dishes/:dishId', (req, res, next) => {
+	res.end('Will send the details of the dish' + req.params.dishId
+	 + ' to you');
+});
+
+app.post('/dishes/:dishId', (req, res, next) => {
+	res.statusCode = 403;
+	res.end('POST operation not supported on /dishes/' + 
+		req.params.dishId);
+});
+
+app.put('/dishes/:dishId', (req, res, next) => {
+	res.write('Updating the dish:' + req.params.dishId + '\n');
+	res.end('Will update the dish' + req.body.name + 'with details' + 
+		req.body.description);
+});
+
+app.delete('/dishes/:dishId', (req, res, next) => {
+	res.end('Will delete the dish ' + req.params.dishId);
+});
+
+// Parse the message of the body in JSON format
+app.use(bodyParser.json());
 
 // next is for middlewares
 
